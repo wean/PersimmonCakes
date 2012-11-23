@@ -3,6 +3,7 @@
 // @namespace gm.weans.info  
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
+// @include http://v.pps.tv/*
 // ==/UserScript==  
 
 // 添加jquery支持
@@ -24,6 +25,19 @@ window.addEventListener('load',function (e){
         var embedPlayer = player.children[0];
         playerHeight = embedPlayer.height;
         playerWidth = embedPlayer.width;
+    } else if (document.location.host == 'www.iqiyi.com'){
+        player = document.getElementById('flashbox');
+        playerHeight = "510";
+        playerWidth = "900";
+    } else if (document.location.host == 'v.pps.tv'){
+        player = document.getElementById('p-players');
+        var divs = player.getElementsByTagName('div');
+        for (var i=0; i<divs.length; i++){
+            if (divs[i].className == 'flash-player'){
+                player = divs[i];
+                break;
+            }
+        }
     }
 
     // 没有找到，退出
