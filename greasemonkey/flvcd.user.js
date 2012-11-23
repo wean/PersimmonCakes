@@ -6,6 +6,7 @@
 // @include http://v.pps.tv/*
 // @include http://v.163.com/movie/*
 // @include http://vod.kankan.com/v/*
+// @include http://www.yinyuetai.com/video/*
 // ==/UserScript==  
 
 
@@ -61,6 +62,11 @@ window.addEventListener('load',function (e){
         playerWidth = player.clientWidth;
     } else if (document.location.host == 'vod.kankan.com'){
         player = document.getElementById('player_container');
+    } else if (document.location.host == 'v.pptv.com'){
+        // pptv 暂不支持
+        player = document.getElementById('pptv_playpage_box');
+    } else if (document.location.host == 'www.yinyuetai.com'){
+        player = document.getElementById('player');
     }
 
     // 没有找到，退出
