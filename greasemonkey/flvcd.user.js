@@ -11,16 +11,19 @@
 
 
 //==================================================================//
-//                                                                  //
-//                        使用方法                                  //
-// 好吧，这个脚本只测试过opera浏览器，Windows 2008 下的12.10, Gentoo//
-// x86_64 下的12.10, vlc的话是2.04。                                //
-// 安装方法：                                                       //
-//     1. 随便拷贝到一个文件夹下，好吧，最好拷贝到一个单独的文件夹。//
-//     2. Opera / 设置 / 首选项 / 高级 / 内容 / JavaScript 选项     //
-//        / JavaScript 文件夹 / 选择， 选择刚才的那个文件夹。       //
-//     3. Opera 最好允许插件加载，不过问题不大。                    //
-//                                                                  //
+//                                                                  
+//                        使用方法
+// Opera 安装方法:
+//     1. 随便拷贝到一个文件夹下，好吧，最好拷贝到一个单独的文件夹。
+//     2. Opera / 设置 / 首选项 / 高级 / 内容 / JavaScript 选项
+//        / JavaScript 文件夹 / 选择， 选择刚才的那个文件夹。
+//     3. Opera 最好允许插件加载，不过问题不大。
+//
+// Firefox 安装方法：
+//     1. 火狐安装GreaseMonky 扩展
+//     2. 把这个文件拖到火狐里去
+//     3. 点击安装就可以了，最好配合FlashBlock使用
+//
 //==================================================================//
 
 // 添加jquery支持
@@ -158,10 +161,14 @@ window.addEventListener('load',function (e){
         getCrossDomain("http://www.flvcd.com/parse.php?flag=&format=&kw=" + encodeURIComponent(document.location) +  "&sbt=%BF%AA%CA%BCGO%21", function(html){
 
             // vlc 事件处理
-            vlc.addEventListener('MediaPlayerEndReached', playerEndReached, false);
-            vlc.addEventListener('MediaPlayerPlaying', playerPlaying, false);
-            vlc.attachEvent('MediaPlayerEndReached', playerEndReached);
-            vlc.attachEvent('MediaPlayerPlaying', playerPlaying);
+            if (typeof vlc.addEventListener != 'undefined'){
+                vlc.addEventListener('MediaPlayerEndReached', playerEndReached, false);
+                vlc.addEventListener('MediaPlayerPlaying', playerPlaying, false);
+            }
+            if (typeof vlc.attachEvent != 'undefined'){
+                vlc.attachEvent('MediaPlayerEndReached', playerEndReached);
+                vlc.attachEvent('MediaPlayerPlaying', playerPlaying);
+            }
 
             $(html).find('td').each(function(){
                 var al = $(this);
