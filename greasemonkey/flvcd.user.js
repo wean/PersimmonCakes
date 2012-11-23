@@ -26,11 +26,33 @@
 //
 //==================================================================//
 
-// 添加jquery支持
-var op_jq = document.createElement("script");
-op_jq.src = "http://code.jquery.com/jquery-1.7.1.js"; //jquery code source
-op_jq.type = "text/javascript";
-document.getElementsByTagName("head")[0].appendChild(op_jq);
+// 判断OS
+
+// 是Windows系统
+function isWindows(){
+    return navigator.appVersion.indexOf("Win") != -1;
+};
+
+// 是X11系统
+function isX11(){
+    return navigator.appVersion.indexOf("X11") != -1;
+};
+
+
+// 判断浏览器
+
+// 是Chrome浏览器
+function isChrome(){
+    return navigator.appVersion.indexOf("Chrome") != -1;
+};
+
+if (isChrome() == false){
+    // 添加jquery支持
+    var op_jq = document.createElement("script");
+    op_jq.src = "http://code.jquery.com/jquery-1.7.1.js"; //jquery code source
+    op_jq.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(op_jq);
+}
 
 window.addEventListener('load',function (e){
 
@@ -95,18 +117,24 @@ window.addEventListener('load',function (e){
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
 
-    // 是Windows系统
-    function isWindows(){
-        return navigator.appVersion.indexOf("Win") != -1;
-    };
-
-    // 是X11系统
-    function isX11(){
-        return navigator.appVersion.indexOf("X11") != -1;
-    };
-
     // 获得跨域内容，通过yql
     var getCrossDomain = function (url, callback, maxage) {
+
+        if (isChrome()){
+            
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                onload: function(r){
+                    if (typeof (callback) === 'function'){
+                        callback(r.responseText);
+                    }
+                }
+            });
+            
+            return;
+        }
+
         if (typeof (url) !== 'undefined') {
             var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + url + '"') + '&diagnostics=false&format=xml&callback=?&_maxage=';
             if (typeof (maxage) === 'undefined') {
@@ -125,8 +153,20 @@ window.addEventListener('load',function (e){
     // 等待jQuery和vlc加载完
     function op_wait()
     {
-        if(typeof window.jQuery == "undefined" || typeof vlc.playlist == "undefined") { window.setTimeout(op_wait,100); }
-        else { $ = window.jQuery; appJQuery(); }
+        if (isChrome() == false){
+            if(typeof window.jQuery == "undefined"){
+                window.setTimeout(op_wait,100); 
+            }
+        }
+
+        if (typeof vlc.playlist == "undefined"){
+            window.setTimeout(op_wait,100); 
+        }
+         
+        if (isChrome() == false){
+            $ = window.jQuery; 
+        }
+        appJQuery();
     }
     op_wait();
 
@@ -170,6 +210,11 @@ window.addEventListener('load',function (e){
                 vlc.attachEvent('MediaPlayerPlaying', playerPlaying);
             }
 
+            var parse = document.createElement('div');
+            parse.innerHTML = html;
+
+            var tds = parse.getElementsByTagName('td');
+            
             $(html).find('td').each(function(){
                 var al = $(this);
                 if (al.length > 0 && al[0].className == 'mn STYLE4'){
