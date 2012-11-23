@@ -4,6 +4,7 @@
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
 // @include http://v.pps.tv/*
+// @include http://v.163.com/movie/*
 // ==/UserScript==  
 
 // 添加jquery支持
@@ -26,6 +27,7 @@ window.addEventListener('load',function (e){
         playerHeight = embedPlayer.height;
         playerWidth = embedPlayer.width;
     } else if (document.location.host == 'www.iqiyi.com'){
+        // 奇异暂时不支持
         player = document.getElementById('flashbox');
         playerHeight = "510";
         playerWidth = "900";
@@ -38,6 +40,10 @@ window.addEventListener('load',function (e){
                 break;
             }
         }
+    } else if (document.location.host == 'v.163.com'){
+        player = document.getElementById('flashArea');
+        playerHeight = player.clientHeight;
+        playerWidth = player.clientWidth;
     }
 
     // 没有找到，退出
