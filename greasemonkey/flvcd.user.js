@@ -5,6 +5,7 @@
 // @include http://bilibili.smgbb.cn/video/av*
 // @include http://v.pps.tv/*
 // @include http://v.163.com/movie/*
+// @include http://vod.kankan.com/v/*
 // ==/UserScript==  
 
 
@@ -58,6 +59,8 @@ window.addEventListener('load',function (e){
         player = document.getElementById('flashArea');
         playerHeight = player.clientHeight;
         playerWidth = player.clientWidth;
+    } else if (document.location.host == 'vod.kankan.com'){
+        player = document.getElementById('player_container');
     }
 
     // 没有找到，退出
