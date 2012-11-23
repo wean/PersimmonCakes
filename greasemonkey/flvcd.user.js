@@ -2,6 +2,7 @@
 // @name flvcd  
 // @namespace gm.weans.info  
 // @include http://v.youku.com/v_show/*
+// @include http://bilibili.smgbb.cn/video/av*
 // ==/UserScript==  
 
 // 添加jquery支持
@@ -14,12 +15,22 @@ window.addEventListener('load',function (e){
 
     // 查找到播放器
     var player = null;
-    player = document.getElementById('player');
+    var playerHeight = "100%";
+    var playerWidth = "100%";
+    if (document.location.host == 'v.youku.com'){
+        player = document.getElementById('player');
+    } else if (document.location.host == 'bilibili.smgbb.cn'){
+        player = document.getElementById('bofqi');
+        var embedPlayer = player.children[0];
+        playerHeight = embedPlayer.height;
+        playerWidth = embedPlayer.width;
+    }
 
     // 没有找到，退出
     if (player == null){
         return;
     }
+
     // 删掉播放器
     player.innerHTML = '';
 
@@ -30,8 +41,9 @@ window.addEventListener('load',function (e){
     vlc.name = 'vlcflash';
     vlc.setAttribute('autoplay', 'true');
     vlc.setAttribute('loop', 'no');
-    vlc.height = '100%';
-    vlc.width = '100%';
+    //vlc.setAttribute('toolbar', 'no');
+    vlc.height = playerHeight;
+    vlc.width = playerWidth;
     player.appendChild(vlc);
 
     // 是否刷新过（linux 全屏一下子）
@@ -46,14 +58,6 @@ window.addEventListener('load',function (e){
     function isX11(){
         return navigator.appVersion.indexOf("X11") != -1;
     };
-
-    // 等待jQuery和vlc加载完
-    function op_wait()
-    {
-        if(typeof window.jQuery == "undefined" || typeof vlc.playlist == "undefined") { window.setTimeout(op_wait,100); }
-        else { $ = window.jQuery; appJQuery(); }
-    }
-    op_wait();
 
     // 获得跨域内容，通过yql
     var getCrossDomain = function (url, callback, maxage) {
@@ -72,6 +76,14 @@ window.addEventListener('load',function (e){
         }
     };
 
+    // 等待jQuery和vlc加载完
+    function op_wait()
+    {
+        if(typeof window.jQuery == "undefined" || typeof vlc.playlist == "undefined") { window.setTimeout(op_wait,100); }
+        else { $ = window.jQuery; appJQuery(); }
+    }
+    op_wait();
+
     // 播放到结尾时
     function playerEndReached(){
         if (vlc && vlc.playlist){
@@ -79,6 +91,7 @@ window.addEventListener('load',function (e){
                 // Linux下需要处理才能自动跳到下面一段
                 vlc.playlist.next();
             }
+            var playItems = vlc.playlist.items;
             return;
         }
     };
@@ -101,6 +114,12 @@ window.addEventListener('load',function (e){
     {
         getCrossDomain("http://www.flvcd.com/parse.php?flag=&format=&kw=" + encodeURIComponent(document.location) +  "&sbt=%BF%AA%CA%BCGO%21", function(html){
 
+            // vlc 事件处理
+            vlc.addEventListener('MediaPlayerEndReached', playerEndReached, false);
+            vlc.addEventListener('MediaPlayerPlaying', playerPlaying, false);
+            vlc.attachEvent('MediaPlayerEndReached', playerEndReached);
+            vlc.attachEvent('MediaPlayerPlaying', playerPlaying);
+
             $(html).find('td').each(function(){
                 var al = $(this);
                 if (al.length > 0 && al[0].className == 'mn STYLE4'){
@@ -120,9 +139,6 @@ window.addEventListener('load',function (e){
                         }
                         vlc.playlist.playItem(0);
 
-                        // vlc 事件处理
-                        vlc.addEventListener('MediaPlayerEndReached', playerEndReached, false);
-                        vlc.addEventListener('MediaPlayerPlaying', playerPlaying, false);
                         return false;
                     }
                 }
