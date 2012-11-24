@@ -46,7 +46,11 @@ function isChrome(){
     return navigator.appVersion.indexOf("Chrome") != -1;
 };
 
-if (isChrome() == false){
+function isFirefox(){
+    return navigator.appName.indexOf("Netscape") != -1;
+};
+
+if (isChrome() == false && isFirefox() == false){
     // 添加jquery支持
     var op_jq = document.createElement("script");
     op_jq.src = "http://code.jquery.com/jquery-1.7.1.js"; //jquery code source
@@ -123,7 +127,7 @@ window.addEventListener('load',function (e){
     // 获得跨域内容，通过yql
     var getCrossDomain = function (url, callback, maxage) {
 
-        if (isChrome()){
+        if (isChrome() || isFirefox()){
             
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -156,7 +160,7 @@ window.addEventListener('load',function (e){
     // 等待jQuery和vlc加载完
     function op_wait()
     {
-        if (isChrome() == false){
+        if (isChrome() == false && isFirefox() == false){
             if(typeof window.jQuery == "undefined"){
                 window.setTimeout(op_wait,100); 
                 return;
@@ -168,7 +172,7 @@ window.addEventListener('load',function (e){
             return;
         }
          
-        if (isChrome() == false){
+        if (isChrome() == false && isFirefox() == false){
             $ = window.jQuery; 
         }
         appJQuery();
