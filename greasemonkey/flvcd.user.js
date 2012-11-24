@@ -60,6 +60,9 @@ window.addEventListener('load',function (e){
     var player = null;
     var playerHeight = "100%";
     var playerWidth = "100%";
+    
+    var playInf = {};
+
     if (document.location.host == 'v.youku.com'){
         player = document.getElementById('player');
     } else if (document.location.host == 'bilibili.smgbb.cn'){
@@ -156,11 +159,13 @@ window.addEventListener('load',function (e){
         if (isChrome() == false){
             if(typeof window.jQuery == "undefined"){
                 window.setTimeout(op_wait,100); 
+                return;
             }
         }
 
         if (typeof vlc.playlist == "undefined"){
             window.setTimeout(op_wait,100); 
+            return;
         }
          
         if (isChrome() == false){
@@ -213,31 +218,75 @@ window.addEventListener('load',function (e){
             var parse = document.createElement('div');
             parse.innerHTML = html;
 
-            var tds = parse.getElementsByTagName('td');
-            
-            $(html).find('td').each(function(){
-                var al = $(this);
-                if (al.length > 0 && al[0].className == 'mn STYLE4'){
-                    if (al[0].innerHTML.indexOf("下载地址") >= 0){
+            var forms = parse.getElementsByTagName('form');
+            if (forms != null){
+                var playInfValue = null;
+                for (var i=0; i<forms.length; i++){
+                    if (forms[i].getAttribute('name') == 'mform'){
+                        // 又找到了 ^_^
 
-                        // 找到下载地址啦 ^ - ^
-
-                        var downList = $(al[0].innerHTML).find('a');
-                        var linkList = [];
-                        for (var i=0; i<downList.length; i++){
-                            linkList.push(downList[i].href);
+                        var mform = forms[i];
+                        var inputs = mform.getElementsByTagName('input');
+                        if (inputs == null){
+                            break;
+                        }
+                        for (var j=0; j<inputs.length; j++){
+                            if (inputs[j].getAttribute('name') == 'inf'){
+                                
+                                playInfValue = inputs[j].value;
+                                
+                                break;
+                            }
                         }
 
-                        // 添加到vlc播放列表
-                        for (var i=0; i<linkList.length; i++){
-                            vlc.playlist.add(linkList[i]);
-                        }
-                        vlc.playlist.playItem(0);
-
-                        return false;
+                        break;
                     }
                 }
-            });
+
+                if (playInfValue != null){
+
+                    var listInfo = playInfValue.split('<');
+                    if (listInfo == null){
+                        return;
+                    }
+
+                    var r = new RegExp('(.*)>(.*)');
+                    
+                    for (var i=0; i< listInfo.length; i++){
+                        var m = listInfo[i].replace(/(^\s*)|(\s*$)/g, "").match(r);
+                    
+                        if (m != null && m.length == 3){
+                            if (typeof playInf.Items == 'undefined'){
+                                if (m[1] == 'N'){
+                                    playInf.Items = [];
+                                    playInf.Items.push({N: m[2]});
+                                } else {
+                                    if (m[2] != ''){
+                                        playInf[m[1]] = m[2];
+                                    }
+                                }
+                            } else {
+                                if (m[1] == 'N'){
+                                    playInf.Items.push({N: m[2]});
+                                } else {
+                                    if (m[2] != ''){
+                                        playInf.Items[playInf.Items.length - 1][m[1]] = m[2];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (playInf != null && playInf.Items != null){
+
+                // 添加到vlc播放列表
+                for (var i=0; i<playInf.Items.length; i++){
+                    vlc.playlist.add(playInf.Items[i].U);
+                }
+                vlc.playlist.playItem(0);
+            }
 
         }, null);
     }
