@@ -46,8 +46,31 @@ function isChrome(){
     return navigator.appVersion.indexOf("Chrome") != -1;
 };
 
+// 是Firefox浏览器
 function isFirefox(){
     return navigator.appName.indexOf("Netscape") != -1;
+};
+
+
+// 获取网站代号
+function getSiteCode(url){
+    if (url.host == 'v.youku.com'){
+        return {site: 'youku'};
+    } else if (url.host == 'bilibili.smgbb.cn'){
+        return {site: 'bilibili'};
+    } else if (url.host == 'www.iqiyi.com'){
+        return {site: 'qiyi'};
+    } else if (url.host == 'v.pps.tv'){
+        return {site: 'pps'};
+    } else if (url.host == 'v.163.com'){
+        return {site: '163'};
+    } else if (url.host == 'vod.kankan.com'){
+        return {site: 'kankan'};
+    } else if (url.host == 'v.pptv.com'){
+        return {site: 'pptv'};
+    } else if (url.host == 'www.yinyuetai.com'){
+        return {site: 'yinyuetai'};
+    } 
 };
 
 if (isChrome() == false && isFirefox() == false){
@@ -67,19 +90,21 @@ window.addEventListener('load',function (e){
     
     var playInf = {};
 
-    if (document.location.host == 'v.youku.com'){
+    var siteInf = getSiteCode(document.location);
+
+    if (siteInf.site == 'youku'){
         player = document.getElementById('player');
-    } else if (document.location.host == 'bilibili.smgbb.cn'){
+    } else if (siteInf.site == 'bilibili'){
         player = document.getElementById('bofqi');
         var embedPlayer = player.children[0];
         playerHeight = embedPlayer.height;
         playerWidth = embedPlayer.width;
-    } else if (document.location.host == 'www.iqiyi.com'){
+    } else if (siteInf.site == 'qiyi'){
         // 奇异暂时不支持
         player = document.getElementById('flashbox');
         playerHeight = "510";
         playerWidth = "900";
-    } else if (document.location.host == 'v.pps.tv'){
+    } else if (siteInf.site == 'pps'){
         player = document.getElementById('p-players');
         var divs = player.getElementsByTagName('div');
         for (var i=0; i<divs.length; i++){
@@ -88,16 +113,16 @@ window.addEventListener('load',function (e){
                 break;
             }
         }
-    } else if (document.location.host == 'v.163.com'){
+    } else if (siteInf.site == '163'){
         player = document.getElementById('flashArea');
         playerHeight = player.clientHeight;
         playerWidth = player.clientWidth;
-    } else if (document.location.host == 'vod.kankan.com'){
+    } else if (siteInf.site == 'kankan'){
         player = document.getElementById('player_container');
-    } else if (document.location.host == 'v.pptv.com'){
+    } else if (siteInf.site == 'pptv'){
         // pptv 暂不支持
         player = document.getElementById('pptv_playpage_box');
-    } else if (document.location.host == 'www.yinyuetai.com'){
+    } else if (siteInf.site == 'yinyuetai'){
         player = document.getElementById('player');
     }
 
