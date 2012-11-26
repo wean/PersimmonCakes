@@ -7,6 +7,8 @@
 // @include http://v.163.com/movie/*
 // @include http://vod.kankan.com/v/*
 // @include http://www.yinyuetai.com/video/*
+// @include http://tv.sohu.com/*
+// @include http://v.sohu.com/*
 // ==/UserScript==  
 
 
@@ -70,7 +72,9 @@ function getSiteCode(url){
         return {site: 'pptv'};
     } else if (url.host == 'www.yinyuetai.com'){
         return {site: 'yinyuetai'};
-    } 
+    } else if (url.host == 'tv.sohu.com'){
+        return {site: 'sohu'};
+    }
 };
 
 if (isChrome() == false && isFirefox() == false){
@@ -124,6 +128,12 @@ window.addEventListener('load',function (e){
         player = document.getElementById('pptv_playpage_box');
     } else if (siteInf.site == 'yinyuetai'){
         player = document.getElementById('player');
+    } else if (siteInf.site == 'sohu'){
+        player = document.getElementById('sohuplayer');
+        if (player != null && player.parentNode != null){
+            playerHeight = player.parentNode.clientHeight;
+            playerWidth = player.parentNode.clientWidth;
+        }
     }
 
     // 没有找到，退出
@@ -310,8 +320,14 @@ window.addEventListener('load',function (e){
 
             if (playInf != null && playInf.Items != null){
 
+                var sohuReg = new RegExp('^.*&new=');
+                var sohuReplaceStr = 'http://newflv.sohu.ccgslb.net';
+
                 // 添加到vlc播放列表
                 for (var i=0; i<playInf.Items.length; i++){
+                    if (siteInf != null && siteInf.site == 'sohu'){
+                        playInf.Items[i].U = playInf.Items[i].U.replace(sohuReg, sohuReplaceStr);
+                    }
                     vlc.playlist.add(playInf.Items[i].U);
                 }
                 vlc.playlist.playItem(0);
