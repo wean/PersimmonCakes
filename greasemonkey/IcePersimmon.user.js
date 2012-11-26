@@ -158,6 +158,7 @@ window.addEventListener('load',function (e){
 
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
+    var playIndex = 0;
 
     // 获得跨域内容，通过yql
     var getCrossDomain = function (url, callback, maxage) {
@@ -215,13 +216,65 @@ window.addEventListener('load',function (e){
     op_wait();
 
     // 播放到结尾时
-    function playerEndReached(){
+    function playerEndReached(e){
         if (vlc && vlc.playlist){
             if (isX11()){
                 // Linux下需要处理才能自动跳到下面一段
-                vlc.playlist.next();
+                playIndex++;
+                if (playIndex < playInf.Items.length){
+                    vlc.playlist.next();
+                } else {
+                    // 连播
+                    if (siteInf != null){
+                        if (siteInf.site == 'youku'){
+
+                            // 专辑
+                            var divList = document.getElementById('listShow');
+                            var ulLists = document.getElementsByTagName('ul');
+                            var ulPage = null;
+                            var ulContent = null;
+                            for (var i=0; i<ulLists.length; i++){
+                                if (ulLists[i].className == 'pack_number'){
+                                    ulContent = ulLists[i];
+                                } else if (ulLists[i].className == 'pages'){
+                                    ulPage = ulLists[i];
+                                }
+                            }
+
+                            // 点播单
+                            if (ulContent == null){
+                                ulContent = document.getElementById('orderList');
+                            }
+
+                            if (ulContent != null){
+                                var nextLink = null;
+                                for (var i=0; i<ulContent.children.length; i++){
+                                    if (ulContent.children[i].className == 'current' && (i+1) < ulContent.children.length){
+                                        var linkA = ulContent.children[i + 1].getElementsByTagName('a');
+                                        if (linkA != null && linkA.length > 0){
+                                            linkA = linkA[0];
+                                        } else{
+                                            linkA = null;
+                                        }
+                                        if (linkA != null){
+                                            nextLink = linkA.href;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (nextLink == null && ulPage != null){
+                                    // 下翻一页
+                                }
+
+                                if (nextLink != null){
+                                    document.location.href = nextLink;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            var playItems = vlc.playlist.items;
             return;
         }
     };
@@ -331,6 +384,7 @@ window.addEventListener('load',function (e){
                     vlc.playlist.add(playInf.Items[i].U);
                 }
                 vlc.playlist.playItem(0);
+                playIndex = 0;
             }
 
         }, null);
