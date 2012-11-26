@@ -1,5 +1,5 @@
 ﻿// ==UserScript==  
-// @name flvcd  
+// @name IcePersimmon
 // @namespace gm.weans.info  
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
