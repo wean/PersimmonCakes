@@ -60,7 +60,7 @@ function isFirefox(){
 var siteList = {};
 function regSite(siteDetail){
     if (siteDetail.keys != null && siteDetail.keys.length > 0){
-        for(var i=0; i<siteDetail.keys.length, i++){
+        for(var i=0; i<siteDetail.keys.length; i++){
             siteList[siteDetail.keys[i].replace('.', '_')] = siteDetail;
         }
     }
@@ -73,8 +73,53 @@ var siteYouku = {
     ],
     getPlayer: function(){
         return {
-            player: document.getElementById('player');
+            player: document.getElementById('player'),
         };
+    },
+    handleEndReached : function(){
+        // 专辑
+        var divList = document.getElementById('listShow');
+        var ulLists = document.getElementsByTagName('ul');
+        var ulPage = null;
+        var ulContent = null;
+        for (var i=0; i<ulLists.length; i++){
+            if (ulLists[i].className == 'pack_number'){
+                ulContent = ulLists[i];
+            } else if (ulLists[i].className == 'pages'){
+                ulPage = ulLists[i];
+            }
+        }
+        
+        // 点播单
+        if (ulContent == null){
+            ulContent = document.getElementById('orderList');
+        }
+        
+        if (ulContent != null){
+            var nextLink = null;
+            for (var i=0; i<ulContent.children.length; i++){
+                if (ulContent.children[i].className == 'current' && (i+1) < ulContent.children.length){
+                    var linkA = ulContent.children[i + 1].getElementsByTagName('a');
+                    if (linkA != null && linkA.length > 0){
+                        linkA = linkA[0];
+                    } else{
+                        linkA = null;
+                    }
+                    if (linkA != null){
+                        nextLink = linkA.href;
+                        break;
+                    }
+                }
+            }
+            
+            if (nextLink == null && ulPage != null){
+                // 下翻一页
+            }
+            
+            if (nextLink != null){
+                document.location.href = nextLink;
+            }
+        }
     },
 };
 regSite(siteYouku);
@@ -182,7 +227,9 @@ var siteYinyuetai = {
         'www.yinyuetai.com',
     ],
     getPlayer : function(){
-        player : document.getElementById('player'),
+        return {
+            player : document.getElementById('player'),
+        };
     },
 };
 regSite(siteYinyuetai);
@@ -206,6 +253,11 @@ var siteSohu = {
             playerWidth: playerWidth,
         };
     },
+    handleFlvcdU : function(u){
+        var sohuReg = new RegExp('^.*&new=');
+        var sohuReplaceStr = 'http://newflv.sohu.ccgslb.net';
+        return u.replace(sohuReg, sohuReplaceStr);
+    }
 };
 regSite(siteSohu);
 
@@ -218,7 +270,7 @@ function getSiteCode(url){
     if (siteList == null){
         return null;
     }
-    return siteList[url.host];
+    return siteList[url.host.replace('.', '_')];
 };
 
 if (isChrome() == false && isFirefox() == false){
@@ -236,7 +288,7 @@ function attachVlcEvent(p, event, callback){
     if (typeof p.addEventListener != 'undefined'){
         p.addEventListener(event, callback, false);
     }
-    if (typeof vlc.attachEvent != 'undefined'){
+    if (typeof p.attachEvent != 'undefined'){
         p.attachEvent(event, callback);
     }
     p['on' + event] = callback;
@@ -339,53 +391,8 @@ window.addEventListener('load',function (e){
                     vlc.playlist.next();
                 } else {
                     // 连播
-                    if (siteInf != null){
-                        if (siteInf.site == 'youku'){
-
-                            // 专辑
-                            var divList = document.getElementById('listShow');
-                            var ulLists = document.getElementsByTagName('ul');
-                            var ulPage = null;
-                            var ulContent = null;
-                            for (var i=0; i<ulLists.length; i++){
-                                if (ulLists[i].className == 'pack_number'){
-                                    ulContent = ulLists[i];
-                                } else if (ulLists[i].className == 'pages'){
-                                    ulPage = ulLists[i];
-                                }
-                            }
-
-                            // 点播单
-                            if (ulContent == null){
-                                ulContent = document.getElementById('orderList');
-                            }
-
-                            if (ulContent != null){
-                                var nextLink = null;
-                                for (var i=0; i<ulContent.children.length; i++){
-                                    if (ulContent.children[i].className == 'current' && (i+1) < ulContent.children.length){
-                                        var linkA = ulContent.children[i + 1].getElementsByTagName('a');
-                                        if (linkA != null && linkA.length > 0){
-                                            linkA = linkA[0];
-                                        } else{
-                                            linkA = null;
-                                        }
-                                        if (linkA != null){
-                                            nextLink = linkA.href;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (nextLink == null && ulPage != null){
-                                    // 下翻一页
-                                }
-
-                                if (nextLink != null){
-                                    document.location.href = nextLink;
-                                }
-                            }
-                        }
+                    if (siteInf != null && siteInf.handleEndReached != null){
+                        siteInf.handleEndReached();
                     }
                 }
             }
@@ -481,13 +488,10 @@ window.addEventListener('load',function (e){
 
             if (playInf != null && playInf.Items != null){
 
-                var sohuReg = new RegExp('^.*&new=');
-                var sohuReplaceStr = 'http://newflv.sohu.ccgslb.net';
-
                 // 添加到vlc播放列表
                 for (var i=0; i<playInf.Items.length; i++){
-                    if (siteInf != null && siteInf.site == 'sohu'){
-                        playInf.Items[i].U = playInf.Items[i].U.replace(sohuReg, sohuReplaceStr);
+                    if (siteInf != null && siteInf.handleFlvcdU != null){
+                        playInf.Items[i].U = siteInf.handleFlvcdU(playInf.Items[i].U);
                     }
                     vlc.playlist.add(playInf.Items[i].U);
                 }
