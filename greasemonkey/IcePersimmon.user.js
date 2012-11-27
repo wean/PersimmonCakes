@@ -54,6 +54,88 @@ function isFirefox(){
 };
 
 
+//===============================================================
+//                      网站定义
+
+var siteList = [];
+
+var siteYouku = {
+    name: '优酷',
+    keys: [
+        'v.youku.com',
+    ],
+};
+siteList.push(siteYouku);
+
+var siteBilibili = {
+    name: 'BiliBili',
+    keys: [
+        'bilibili.smgbb.com',
+    ],
+};
+siteList.push(siteBilibili);
+
+var siteQiyi = {
+    name: '奇异',
+    keys: [
+        'www.iqiyi.com',
+    ],
+};
+siteList.push(siteQiyi);
+
+var sitePps = {
+    name: 'PPS',
+    keys: [
+        'v.pps.tv',
+    ],
+};
+siteList.push(sitePps);
+
+var site163 = {
+    name: '网易',
+    keys: [
+        'v.163.com',
+    ],
+};
+siteList.push(site163);
+
+var siteKankan = {
+    name: '迅雷看看',
+    keys: [
+        'vod.kankan.com',
+    ],
+};
+siteList.push(siteKankan);
+
+var sitePptv = {
+    name: 'PPTV',
+    keys: [
+        'v.pptv.com',
+    ],
+};
+siteList.push(sitePptv);
+
+var siteYinyuetai = {
+    name: '音悦台',
+    keys: [
+        'www.yinyuetai.com',
+    ],
+};
+siteList.push(siteYinyuetai);
+
+var siteSohu = {
+    name: '搜狐视频',
+    keys: [
+        'tv.sohu.com',
+    ],
+    
+};
+siteList.push(siteSohu);
+
+//
+//===============================================================
+
+
 // 获取网站代号
 function getSiteCode(url){
     if (url.host == 'v.youku.com'){
