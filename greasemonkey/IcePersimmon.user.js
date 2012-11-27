@@ -57,80 +57,157 @@ function isFirefox(){
 //===============================================================
 //                      网站定义
 
-var siteList = [];
+var siteList = {};
+function regSite(siteDetail){
+    if (siteDetail.keys != null && siteDetail.keys.length > 0){
+        for(var i=0; i<siteDetail.keys.length, i++){
+            siteList[siteDetail.keys[i].replace('.', '_')] = siteDetail;
+        }
+    }
+}
 
 var siteYouku = {
     name: '优酷',
     keys: [
         'v.youku.com',
     ],
+    getPlayer: function(){
+        return {
+            player: document.getElementById('player');
+        };
+    },
 };
-siteList.push(siteYouku);
+regSite(siteYouku);
 
 var siteBilibili = {
     name: 'BiliBili',
     keys: [
         'bilibili.smgbb.com',
     ],
+    getPlayer: function(){
+        var player = document.getElementById('bofqi');
+        var embedPlayer = player.children[0];
+        return {
+            player : player,
+            playerHeight : embedPlayer.height,
+            playerWidth : embedPlayer.width,
+        };
+    },
 };
-siteList.push(siteBilibili);
+regSite(siteBilibili);
 
 var siteQiyi = {
     name: '奇异',
     keys: [
         'www.iqiyi.com',
     ],
+    getPlayer : function(){
+        // 奇异暂时不支持
+        return {
+            player : document.getElementById('flashbox'),
+            playerHeight : "510",
+            playerWidth : "900",
+        }
+    },
 };
-siteList.push(siteQiyi);
+regSite(siteQiyi);
 
 var sitePps = {
     name: 'PPS',
     keys: [
         'v.pps.tv',
     ],
+    getPlayer : function(){
+        var player = document.getElementById('p-players');
+        var divs = player.getElementsByTagName('div');
+        for (var i=0; i<divs.length; i++){
+            if (divs[i].className == 'flash-player'){
+                player = divs[i];
+                break;
+            }
+        }
+        return {
+            player : player,
+        };
+    },
 };
-siteList.push(sitePps);
+regSite(sitePps);
 
 var site163 = {
     name: '网易',
     keys: [
         'v.163.com',
     ],
+    getPlayer : function(){
+        var player = document.getElementById('flashArea');
+        return {
+            player : player,
+            playerHeight : player.clientHeight,
+            playerWidth : player.clientWidth,
+        };
+    },
 };
-siteList.push(site163);
+regSite(site163);
 
 var siteKankan = {
     name: '迅雷看看',
     keys: [
         'vod.kankan.com',
     ],
+    getPlayer : function(){
+        return {
+            player : document.getElementById('player_container'),
+        };
+    },
 };
-siteList.push(siteKankan);
+regSite(siteKankan);
 
 var sitePptv = {
     name: 'PPTV',
     keys: [
         'v.pptv.com',
     ],
+    getPlayer : function(){
+        return {
+            // pptv 暂不支持
+            player : document.getElementById('pptv_playpage_box'),
+        }
+    },
 };
-siteList.push(sitePptv);
+regSite(sitePptv);
 
 var siteYinyuetai = {
     name: '音悦台',
     keys: [
         'www.yinyuetai.com',
     ],
+    getPlayer : function(){
+        player : document.getElementById('player'),
+    },
 };
-siteList.push(siteYinyuetai);
+regSite(siteYinyuetai);
 
 var siteSohu = {
     name: '搜狐视频',
     keys: [
         'tv.sohu.com',
     ],
-    
+    getPlayer : function(){
+        var player = document.getElementById('sohuplayer');
+        var playerHeight = null;
+        var playerWidth = null;
+        if (player != null && player.parentNode != null){
+            playerHeight = player.parentNode.clientHeight;
+            playerWidth = player.parentNode.clientWidth;
+        }
+        return {
+            player: player,
+            playerHeight: playerHeight,
+            playerWidth: playerWidth,
+        };
+    },
 };
-siteList.push(siteSohu);
+regSite(siteSohu);
 
 //
 //===============================================================
@@ -138,25 +215,10 @@ siteList.push(siteSohu);
 
 // 获取网站代号
 function getSiteCode(url){
-    if (url.host == 'v.youku.com'){
-        return {site: 'youku'};
-    } else if (url.host == 'bilibili.smgbb.cn'){
-        return {site: 'bilibili'};
-    } else if (url.host == 'www.iqiyi.com'){
-        return {site: 'qiyi'};
-    } else if (url.host == 'v.pps.tv'){
-        return {site: 'pps'};
-    } else if (url.host == 'v.163.com'){
-        return {site: '163'};
-    } else if (url.host == 'vod.kankan.com'){
-        return {site: 'kankan'};
-    } else if (url.host == 'v.pptv.com'){
-        return {site: 'pptv'};
-    } else if (url.host == 'www.yinyuetai.com'){
-        return {site: 'yinyuetai'};
-    } else if (url.host == 'tv.sohu.com'){
-        return {site: 'sohu'};
+    if (siteList == null){
+        return null;
     }
+    return siteList[url.host];
 };
 
 if (isChrome() == false && isFirefox() == false){
@@ -216,61 +278,18 @@ function getCrossDomain(url, callback, maxage) {
 window.addEventListener('load',function (e){
 
     // 查找到播放器
-    var player = null;
-    var playerHeight = "100%";
-    var playerWidth = "100%";
-    
     var playInf = {};
 
     var siteInf = getSiteCode(document.location);
-
-    if (siteInf.site == 'youku'){
-        player = document.getElementById('player');
-    } else if (siteInf.site == 'bilibili'){
-        player = document.getElementById('bofqi');
-        var embedPlayer = player.children[0];
-        playerHeight = embedPlayer.height;
-        playerWidth = embedPlayer.width;
-    } else if (siteInf.site == 'qiyi'){
-        // 奇异暂时不支持
-        player = document.getElementById('flashbox');
-        playerHeight = "510";
-        playerWidth = "900";
-    } else if (siteInf.site == 'pps'){
-        player = document.getElementById('p-players');
-        var divs = player.getElementsByTagName('div');
-        for (var i=0; i<divs.length; i++){
-            if (divs[i].className == 'flash-player'){
-                player = divs[i];
-                break;
-            }
-        }
-    } else if (siteInf.site == '163'){
-        player = document.getElementById('flashArea');
-        playerHeight = player.clientHeight;
-        playerWidth = player.clientWidth;
-    } else if (siteInf.site == 'kankan'){
-        player = document.getElementById('player_container');
-    } else if (siteInf.site == 'pptv'){
-        // pptv 暂不支持
-        player = document.getElementById('pptv_playpage_box');
-    } else if (siteInf.site == 'yinyuetai'){
-        player = document.getElementById('player');
-    } else if (siteInf.site == 'sohu'){
-        player = document.getElementById('sohuplayer');
-        if (player != null && player.parentNode != null){
-            playerHeight = player.parentNode.clientHeight;
-            playerWidth = player.parentNode.clientWidth;
-        }
-    }
-
+    player = siteInf.getPlayer();
+    
     // 没有找到，退出
-    if (player == null){
+    if (player == null || player.player == null){
         return;
     }
 
     // 删掉播放器
-    player.innerHTML = '';
+    player.player.innerHTML = '';
 
     // 用vlc替代
     var vlc = document.createElement('embed');
@@ -280,9 +299,9 @@ window.addEventListener('load',function (e){
     vlc.setAttribute('autoplay', 'true');
     vlc.setAttribute('loop', 'no');
     //vlc.setAttribute('toolbar', 'no');
-    vlc.height = playerHeight;
-    vlc.width = playerWidth;
-    player.appendChild(vlc);
+    vlc.height = player.playerHeight == null ? "100%" : player.playerHeight;
+    vlc.width = player.playerWidth == null ? '100%' : player.playerWidth;
+    player.player.appendChild(vlc);
 
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
