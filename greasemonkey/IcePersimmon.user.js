@@ -85,6 +85,52 @@ if (isChrome() == false && isFirefox() == false){
     document.getElementsByTagName("head")[0].appendChild(op_jq);
 }
 
+function attachVlcEvent(p, event, callback){
+    if (p == null || event == null || callback == null){
+        return;
+    }
+    if (typeof p.addEventListener != 'undefined'){
+        p.addEventListener(event, callback, false);
+    }
+    if (typeof vlc.attachEvent != 'undefined'){
+        p.attachEvent(event, callback);
+    }
+    p['on' + event] = callback;
+};
+
+    // 获得跨域内容，通过yql
+function getCrossDomain(url, callback, maxage) {
+
+    if (isChrome() || isFirefox()){
+        
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: url,
+            onload: function(r){
+                if (typeof (callback) === 'function'){
+                    callback(r.responseText);
+                }
+            }
+        });
+            
+        return;
+    }
+
+    if (typeof (url) !== 'undefined') {
+        var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + url + '"') + '&diagnostics=false&format=xml&callback=?&_maxage=';
+        if (typeof (maxage) === 'undefined') {
+            yql += '10000'; // Value is in ms
+        }
+        $.getJSON(yql, function (data) {
+            if (typeof (callback) === 'function') {
+                callback(data.results[0]);
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // Some code here to handle a failed request
+        });
+    }
+};
+
 window.addEventListener('load',function (e){
 
     // 查找到播放器
@@ -159,39 +205,6 @@ window.addEventListener('load',function (e){
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
     var playIndex = 0;
-
-    // 获得跨域内容，通过yql
-    var getCrossDomain = function (url, callback, maxage) {
-
-        if (isChrome() || isFirefox()){
-            
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: url,
-                onload: function(r){
-                    if (typeof (callback) === 'function'){
-                        callback(r.responseText);
-                    }
-                }
-            });
-            
-            return;
-        }
-
-        if (typeof (url) !== 'undefined') {
-            var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + url + '"') + '&diagnostics=false&format=xml&callback=?&_maxage=';
-            if (typeof (maxage) === 'undefined') {
-                yql += '10000'; // Value is in ms
-            }
-            $.getJSON(yql, function (data) {
-                if (typeof (callback) === 'function') {
-                    callback(data.results[0]);
-                }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                // Some code here to handle a failed request
-            });
-        }
-    };
 
     // 等待jQuery和vlc加载完
     function op_wait()
@@ -298,14 +311,8 @@ window.addEventListener('load',function (e){
         getCrossDomain("http://www.flvcd.com/parse.php?flag=&format=&kw=" + encodeURIComponent(document.location) +  "&sbt=%BF%AA%CA%BCGO%21", function(html){
 
             // vlc 事件处理
-            if (typeof vlc.addEventListener != 'undefined'){
-                vlc.addEventListener('MediaPlayerEndReached', playerEndReached, false);
-                vlc.addEventListener('MediaPlayerPlaying', playerPlaying, false);
-            }
-            if (typeof vlc.attachEvent != 'undefined'){
-                vlc.attachEvent('MediaPlayerEndReached', playerEndReached);
-                vlc.attachEvent('MediaPlayerPlaying', playerPlaying);
-            }
+            attachVlcEvent(vlc, 'MediaPlayerEndReached', playerEndReached);
+            attachVlcEvent(vlc, 'MediaPlayerPlaying', playerPlaying);
 
             var parse = document.createElement('div');
             parse.innerHTML = html;
