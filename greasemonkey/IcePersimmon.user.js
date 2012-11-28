@@ -2,7 +2,7 @@
 // @name IcePersimmon
 // @namespace gm.weans.info
 // @description VLC替代视频网站的Flash播放器
-// @Author Wean
+// @author Wean
 // @mail weanwz@gmail.com
 // @version 0.1.0
 // @include http://v.youku.com/v_show/*
@@ -331,7 +331,7 @@ function getCrossDomain(url, callback, maxage) {
     }
 };
 
-window.addEventListener('load',function (e){
+function IcePersimmonMain(e){
 
     // 查找到播放器
     var playInf = {};
@@ -505,4 +505,7 @@ window.addEventListener('load',function (e){
 
         }, null);
     }
-},false);
+};
+
+IcePersimmonMain();
+//window.addEventListener('load', IcePersimmonMain, false);
