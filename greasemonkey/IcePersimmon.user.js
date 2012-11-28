@@ -58,6 +58,15 @@ function isFirefox(){
     return navigator.appName.indexOf("Netscape") != -1;
 };
 
+// 格式化数字
+function formatDigital(str){
+    
+};
+
+// 获取关联度最大的视频
+function getMostRelateVideo(title, videos){
+    return null;
+};
 
 //===============================================================
 //                      网站定义
@@ -81,11 +90,65 @@ var siteYouku = {
             player: document.getElementById('player'),
         };
     },
+    doRelateVideo: function(){
+        var curTitle = null;
+        var metas = document.head.getElementsByTagName('meta');
+        if (metas != null){
+            for (var i=0; i<metas.length; i++){
+                if (metas[i]['name'] == 'description'){
+                    curTitle = metas[i]['content'];
+                    break;
+                }
+            }
+        }
+        if (curTitle == null){
+            return;
+        }
+        var relateVideos = null;
+        var relateVideoDiv = document.getElementById('vprelationvideo');
+        if (relateVideoDiv == null){
+            return;
+        }
+        var tmpDivs = relateVideoDiv.getElementsByTagName('div');
+        if (tmpDivs == null){
+            return;
+        }
+        for (var i=0; i<tmpDivs.length; i++){
+            if (tmpDivs[i].className == 'items'){
+                relateVideos = tmpDivs[i].getElementsByTagName('ul');
+                break;
+            }
+        }
+        if (relateVideos == null){
+            return;
+        }
+        var videos = [];
+        for (var i=0; i<relateVideos.length; i++){
+            var v = relateVideo[i];
+            var lis = v.getElementsByTagName('li');
+            if (lis == null){
+                continue;
+            }
+            for (var j=0; j<lis.length; j++){
+                if (lis[j].className == 'v_link'){
+                    var linkAs = lis[j].getElementsByTagName('a');
+                    if (linkAs != null && linkAs.length > 0){
+                        videos.push(linkAs[0]);
+                    }
+                    break;
+                }
+            }
+        }
+        var relateVideo = getMostRelateVideo(curTitle, videos);
+        if (relateVideo != null){
+            document.location.href = relateVideo.href;
+        } 
+    },
     handleEndReached : function(){
         // 专辑
         var pagerParam = '?__rt=1&__ro=listShow';
         var divList = document.getElementById('listShow');
-        var ulLists = document.getElementsByTagName('ul');
+        var ulLists = divList.getElementsByTagName('ul');
         var ulPage = null;
         var ulContent = null;
         for (var i=0; i<ulLists.length; i++){
@@ -114,8 +177,8 @@ var siteYouku = {
                     }
                     if (linkA != null){
                         nextLink = linkA.href;
-                        break;
                     }
+                    break;
                 }
             }
             
@@ -132,8 +195,9 @@ var siteYouku = {
                         }
                         
                         if (linkA != null){
-                            pagerLink = document.location.origin + linkA.href + pagerParam;
+                            pagerLink = linkA.href + pagerParam;
                         }
+                        break;
                     }
                 }
                 var xmlReq = new XMLHttpRequest();
@@ -148,6 +212,7 @@ var siteYouku = {
                                 for (var i=0; i<nextPageULs.length; i++){
                                     if (nextPageULs[i].className == 'pack_number'){
                                         nextPageContent = nextPageULs[i];
+                                        break;
                                     }
                                 }
                             }
@@ -158,8 +223,10 @@ var siteYouku = {
                                 } else {
                                     linkA = null;
                                 }
-                                if (linkA != null && linkA.href != null){
+                                if (linkA != null){
                                     document.location.href = linkA.href;
+                                } else {
+                                    doRelateVideo();
                                 }
                             }
                         }
@@ -172,6 +239,8 @@ var siteYouku = {
             
             if (nextLink != null){
                 document.location.href = nextLink;
+            } else {
+                doRelateVideo();
             }
         }
     },
