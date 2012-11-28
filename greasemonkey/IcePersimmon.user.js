@@ -83,6 +83,7 @@ var siteYouku = {
     },
     handleEndReached : function(){
         // 专辑
+        var pagerParam = '?__rt=1&__ro=listShow';
         var divList = document.getElementById('listShow');
         var ulLists = document.getElementsByTagName('ul');
         var ulPage = null;
@@ -97,6 +98,7 @@ var siteYouku = {
         
         // 点播单
         if (ulContent == null){
+            pagerParam = '';
             ulContent = document.getElementById('orderList');
         }
         
@@ -119,6 +121,53 @@ var siteYouku = {
             
             if (nextLink == null && ulPage != null){
                 // 下翻一页
+                var pagerLink = null;
+                for (var i=0; i<ulPage.children.length; i++){
+                    if (ulPage.children[i].className == 'current' && (i+1) < ulPage.children.length){
+                        var linkA = ulPage.children[i + 1].getElementsByTagName('a');
+                        if (linkA != null && linkA.length > 0){
+                            linkA = linkA[0];
+                        } else {
+                            linkA = null;
+                        }
+                        
+                        if (linkA != null){
+                            pagerLink = document.location.origin + linkA.href + pagerParam;
+                        }
+                    }
+                }
+                var xmlReq = new XMLHttpRequest();
+                xmlReq.onreadystatechange = function(){
+                    if (xmlReq.readyState == 4){
+                        if (xmlReq.status == 200){
+                            var parser = document.createElement('div');
+                            parser.innerHTML = xmlReq.responseText;
+                            var nextPageULs = parser.getElementsByTagName('ul');
+                            var nextPageContent = null;
+                            if (nextPageULs != null){
+                                for (var i=0; i<nextPageULs.length; i++){
+                                    if (nextPageULs[i].className == 'pack_number'){
+                                        nextPageContent = nextPageULs[i];
+                                    }
+                                }
+                            }
+                            if (nextPageContent != null && nextPageContent.children != null && nextPageContent.children.length > 0){
+                                var linkA = nextPageContent.children[i].getElementsByTagName('a');
+                                if (linkA != null && linkA.length > 0){
+                                    linkA = linkA[0];
+                                } else {
+                                    linkA = null;
+                                }
+                                if (linkA != null && linkA.href != null){
+                                    document.location.href = linkA.href;
+                                }
+                            }
+                        }
+                    }
+                };
+                xmlReq.open('GET', pagerLink, true);
+                xmlReq.send(null);
+                return;
             }
             
             if (nextLink != null){
