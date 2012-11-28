@@ -13,6 +13,7 @@
 // @include http://www.yinyuetai.com/video/*
 // @include http://tv.sohu.com/*
 // @include http://v.sohu.com/*
+// @include http://www.56.com/*
 // ==/UserScript==  
 
 
@@ -264,6 +265,28 @@ var siteSohu = {
     }
 };
 regSite(siteSohu);
+
+var site56 = {
+    name: '56',
+    keys: [
+        'www.56.com',
+    ],
+    getPlayer: function(){
+        var player = document.getElementById('VideoPlayObject');
+        var playerHeight = null;
+        var playerWidth = null;
+        if (player != null){
+            playerWidth = player.width;
+            playerHeight = player.height;
+        }
+        return {
+            player: player,
+            playerHeight: playerHeight,
+            playerWidth: playerWidth,
+        };
+    },
+};
+regSite(site56);
 
 //
 //===============================================================
