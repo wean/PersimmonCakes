@@ -1,6 +1,10 @@
 ﻿// ==UserScript==  
 // @name IcePersimmon
-// @namespace gm.weans.info  
+// @namespace gm.weans.info
+// @description VLC替代视频网站的Flash播放器
+// @Author Wean
+// @mail weanwz@gmail.com
+// @version 0.1.0
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
 // @include http://v.pps.tv/*
