@@ -31,6 +31,11 @@
 //     2. 把这个文件拖到火狐里去
 //     3. 点击安装就可以了，最好配合FlashBlock使用
 //
+// Chrome 安装方法：
+//     1. 扳手 / 工具 / 扩展程序
+//     2. 把这个文件拖到浏览器里
+//     3. 点击添加，安装完成
+//
 //==================================================================//
 
 // 判断OS
@@ -514,7 +519,7 @@ function IcePersimmonMain(e){
     {
         if (isChrome() == false && isFirefox() == false){
             if(typeof window.jQuery == "undefined"){
-                window.setTimeout(op_wait,100); 
+                window.setTimeout(op_wait,300); 
                 return;
             }
         }
@@ -526,7 +531,7 @@ function IcePersimmonMain(e){
         }
 
         if (typeof vlc.playlist == "undefined"){
-            window.setTimeout(op_wait,100); 
+            window.setTimeout(op_wait,300); 
             return;
         }
          
