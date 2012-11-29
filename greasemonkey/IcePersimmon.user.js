@@ -503,6 +503,8 @@ function IcePersimmonMain(e){
     vlc.width = player.playerWidth == null ? '100%' : player.playerWidth;
     player.player.appendChild(vlc);
 
+    navigator.plugins.refresh(false);
+
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
     var playIndex = 0;
@@ -514,6 +516,12 @@ function IcePersimmonMain(e){
             if(typeof window.jQuery == "undefined"){
                 window.setTimeout(op_wait,100); 
                 return;
+            }
+        }
+
+        if (isFirefox() == true){
+            if (vlc.wrappedJSObject != null){
+                vlc = vlc.wrappedJSObject;
             }
         }
 
