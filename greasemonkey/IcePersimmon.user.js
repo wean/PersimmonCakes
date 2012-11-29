@@ -65,7 +65,10 @@ function formatDigital(str){
 
 // 获取关联度最大的视频
 function getMostRelateVideo(title, videos){
-    return null;
+    if (videos == null || videos.length == 0){
+        return null;
+    }
+    return videos[0];
 };
 
 //===============================================================
