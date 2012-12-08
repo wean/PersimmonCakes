@@ -4,7 +4,7 @@
 // @description VLC替代视频网站的Flash播放器
 // @author Wean
 // @mail weanwz@gmail.com
-// @version 0.1.0
+// @version 0.1.1
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
 // @include http://v.pps.tv/*
