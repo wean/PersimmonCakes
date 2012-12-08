@@ -63,6 +63,22 @@ function isFirefox(){
     return navigator.appName.indexOf("Netscape") != -1;
 };
 
+// 获得标题中的数字
+function getDigitals(str){
+    var digis = [];
+    if (str != null){
+        digis = str.replace(/\D/g, ' ').split(' ').sort();
+    }
+    while (digis.length > 0){
+        if (digis[0] == ''){
+            digis.shift();
+        } else {
+            break;
+        }
+    }
+    return digis;
+};
+
 // 格式化数字
 function formatDigital(str){
     
@@ -73,6 +89,25 @@ function getMostRelateVideo(title, videos){
     if (videos == null || videos.length == 0){
         return null;
     }
+
+    // 找有数字相差1的视频
+    var titleDigitals = getDigitals(title);
+    if (titleDigitals != null && titleDigitals.length > 0){
+        for (var i=0; i<videos.length; i++){
+            var vDigitals = getDigitals(videos[i].title);
+            if (vDigitals == null){
+                continue;
+            }
+            for (var j=0; j<vDigitals.length; j++){
+                for (var k=0; k<titleDigitals.length; k++){
+                    if (parseInt(titleDigitals[k]) + 1 == vDigitals[j]){
+                        return videos[i];
+                    }
+                }
+            }
+        }
+    }
+
     return videos[0];
 };
 
@@ -132,7 +167,7 @@ var siteYouku = {
         }
         var videos = [];
         for (var i=0; i<relateVideos.length; i++){
-            var v = relateVideo[i];
+            var v = relateVideos[i];
             var lis = v.getElementsByTagName('li');
             if (lis == null){
                 continue;
@@ -156,7 +191,15 @@ var siteYouku = {
         // 专辑
         var pagerParam = '?__rt=1&__ro=listShow';
         var divList = document.getElementById('listShow');
+        if (divList == null){
+            this.doRelateVideo();
+            return;
+        }
         var ulLists = divList.getElementsByTagName('ul');
+        if (ulLists == null){
+            this.doRelateVideo();
+            return;
+        }
         var ulPage = null;
         var ulContent = null;
         for (var i=0; i<ulLists.length; i++){
@@ -234,7 +277,7 @@ var siteYouku = {
                                 if (linkA != null){
                                     document.location.href = linkA.href;
                                 } else {
-                                    doRelateVideo();
+                                    siteYouku.doRelateVideo();
                                 }
                             }
                         }
@@ -248,7 +291,7 @@ var siteYouku = {
             if (nextLink != null){
                 document.location.href = nextLink;
             } else {
-                doRelateVideo();
+                this.doRelateVideo();
             }
         }
     },
