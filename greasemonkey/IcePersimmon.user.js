@@ -98,8 +98,8 @@ function getMostRelateVideo(title, videos){
             if (vDigitals == null){
                 continue;
             }
-            for (var j=0; j<vDigitals.length; j++){
-                for (var k=0; k<titleDigitals.length; k++){
+            for (var j=vDigitals.length-1; j>=0; j--){
+                for (var k=titleDigitals.length-1; k>=0; k--){
                     if (parseInt(titleDigitals[k]) + 1 == vDigitals[j]){
                         return videos[i];
                     }
@@ -543,7 +543,6 @@ function IcePersimmonMain(e){
     var vlc = document.createElement('embed');
     vlc.type = 'application/x-vlc-plugin';
     vlc.name = 'vlcflash';
-    vlc.name = 'vlcflash';
     vlc.setAttribute('autoplay', 'true');
     vlc.setAttribute('loop', 'no');
     //vlc.setAttribute('toolbar', 'no');
@@ -552,6 +551,63 @@ function IcePersimmonMain(e){
     player.player.appendChild(vlc);
 
     navigator.plugins.refresh(false);
+
+    // 添加CSS
+    var btnStyle = document.createElement('style');
+    btnStyle.type = 'text/css';
+    var styleText = ".ipbutton {\
+   border-top: 1px solid #858585;\
+   background: #000000;\
+   background: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000));\
+   background: -webkit-linear-gradient(top, #000000, #000000);\
+   background: -moz-linear-gradient(top, #000000, #000000);\
+   background: -ms-linear-gradient(top, #000000, #000000);\
+   background: -o-linear-gradient(top, #000000, #000000);\
+   padding: 6.5px 13px;\
+   -webkit-border-radius: 5px;\
+   -moz-border-radius: 5px;\
+   border-radius: 5px;\
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;\
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;\
+   box-shadow: rgba(0,0,0,1) 0 1px 0;\
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;\
+   color: #a8a8a8;\
+   font-size: 15px;\
+   font-family: Georgia, serif;\
+   text-decoration: none;\
+   vertical-align: middle;\
+   }\
+ .ipbutton:hover {\
+   border-top-color: #6e6e6e;\
+   background: #6e6e6e;\
+   color: #e0e0e0;\
+   }\
+ .ipbutton:active {\
+   border-top-color: #d4d4d4;\
+   background: #d4d4d4;\
+   }\
+ .ipline{\
+   margin: 9px 0px 9px 0px\
+  }";
+    if (btnStyle.styleSheet){
+        btnStyle.styleSheet.cssText = styleText;
+    } else {
+        btnStyle.appendChild(document.createTextNode(styleText));
+    }
+    document.getElementsByTagName('head')[0].appendChild(btnStyle);
+
+    var toolsDiv = document.createElement('div');
+    toolsDiv.style['z-index'] = 9999;
+    toolsDiv.height = '100px';
+    toolsDiv.width = '20px';
+    toolsDiv.style['background-color'] = '#FFFFFF';
+    toolsDiv.style['position'] = 'fixed';
+    toolsDiv.style['visibility'] = 'show';
+    toolsDiv.style['left'] = '0px';
+    toolsDiv.style['top'] = '100px';
+    toolsDiv.name = 'IPTools';
+    toolsDiv.innerHTML = '<p class="ipline"><a href="" class="ipbutton">Text</a></p><p class="ipline"><a href="" class="ipbutton">Text</a></p>';
+    document.body.appendChild(toolsDiv);
 
     // 是否刷新过（linux 全屏一下子）
     var refreshed = false;
