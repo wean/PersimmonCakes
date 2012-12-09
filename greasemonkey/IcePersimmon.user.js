@@ -620,7 +620,7 @@ function IcePersimmonMain(e){
     // 主处理
     function appJQuery()
     {
-        getCrossDomain("http://www.flvcd.com/parse.php?flag=&format=&kw=" + encodeURIComponent(document.location) +  "&sbt=%BF%AA%CA%BCGO%21", function(html){
+        getCrossDomain("http://www.flvcd.com/parse.php?flag=one&format=super&kw=" + encodeURIComponent(document.location), function(html){
 
             // vlc 事件处理
             attachVlcEvent(vlc, 'MediaPlayerEndReached', playerEndReached);
