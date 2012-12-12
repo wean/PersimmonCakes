@@ -1,5 +1,5 @@
 ﻿// ==UserScript==  
-// @name IcePersimmon
+/// @name IcePersimmon
 // @namespace gm.weans.info
 // @description VLC替代视频网站的Flash播放器
 // @author Wean
@@ -301,7 +301,7 @@ regSite(siteYouku);
 var siteBilibili = {
     name: 'BiliBili',
     keys: [
-        'bilibili.smgbb.com',
+        'bilibili.smgbb.cn',
     ],
     getPlayer: function(){
         var player = document.getElementById('bofqi');
