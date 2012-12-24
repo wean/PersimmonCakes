@@ -38,15 +38,17 @@
 //
 //==================================================================//
 
+var IP = {};
+
 // 判断OS
 
 // 是Windows系统
-function isWindows(){
+IP.isWindows = function(){
     return navigator.appVersion.indexOf("Win") != -1;
 };
 
 // 是X11系统
-function isX11(){
+IP.isX11 = function(){
     return navigator.appVersion.indexOf("X11") != -1;
 };
 
@@ -54,17 +56,17 @@ function isX11(){
 // 判断浏览器
 
 // 是Chrome浏览器
-function isChrome(){
+IP.isChrome = function(){
     return navigator.appVersion.indexOf("Chrome") != -1;
 };
 
 // 是Firefox浏览器
-function isFirefox(){
+IP.isFirefox = function(){
     return navigator.appName.indexOf("Netscape") != -1;
 };
 
 // 获得标题中的数字
-function getDigitals(str){
+IP.getDigitals = function(str){
     var digis = [];
     if (str != null){
         digis = str.replace(/\D/g, ' ').split(' ').sort();
@@ -80,21 +82,21 @@ function getDigitals(str){
 };
 
 // 格式化数字
-function formatDigital(str){
+IP.formatDigital = function(str){
     
 };
 
 // 获取关联度最大的视频
-function getMostRelateVideo(title, videos){
+IP.getMostRelateVideo = function(title, videos){
     if (videos == null || videos.length == 0){
         return null;
     }
 
     // 找有数字相差1的视频
-    var titleDigitals = getDigitals(title);
+    var titleDigitals = IP.getDigitals(title);
     if (titleDigitals != null && titleDigitals.length > 0){
         for (var i=0; i<videos.length; i++){
-            var vDigitals = getDigitals(videos[i].title);
+            var vDigitals = IP.getDigitals(videos[i].title);
             if (vDigitals == null){
                 continue;
             }
@@ -114,16 +116,16 @@ function getMostRelateVideo(title, videos){
 //===============================================================
 //                      网站定义
 
-var siteList = {};
-function regSite(siteDetail){
+IP.siteList = {};
+IP.regSite = function(siteDetail){
     if (siteDetail.keys != null && siteDetail.keys.length > 0){
         for(var i=0; i<siteDetail.keys.length; i++){
-            siteList[siteDetail.keys[i].replace('.', '_')] = siteDetail;
+            IP.siteList[siteDetail.keys[i].replace('.', '_')] = siteDetail;
         }
     }
 }
 
-var siteYouku = {
+IP.siteYouku = {
     name: '优酷',
     keys: [
         'v.youku.com',
@@ -182,7 +184,7 @@ var siteYouku = {
                 }
             }
         }
-        var relateVideo = getMostRelateVideo(curTitle, videos);
+        var relateVideo = IP.getMostRelateVideo(curTitle, videos);
         if (relateVideo != null){
             document.location.href = relateVideo.href;
         } 
@@ -277,7 +279,7 @@ var siteYouku = {
                                 if (linkA != null){
                                     document.location.href = linkA.href;
                                 } else {
-                                    siteYouku.doRelateVideo();
+                                    IP.siteYouku.doRelateVideo();
                                 }
                             }
                         }
@@ -296,9 +298,9 @@ var siteYouku = {
         }
     },
 };
-regSite(siteYouku);
+IP.regSite(IP.siteYouku);
 
-var siteBilibili = {
+IP.siteBilibili = {
     name: 'BiliBili',
     keys: [
         'bilibili.smgbb.cn',
@@ -313,9 +315,9 @@ var siteBilibili = {
         };
     },
 };
-regSite(siteBilibili);
+IP.regSite(IP.siteBilibili);
 
-var siteQiyi = {
+IP.siteQiyi = {
     name: '奇异',
     keys: [
         'www.iqiyi.com',
@@ -329,9 +331,9 @@ var siteQiyi = {
         }
     },
 };
-regSite(siteQiyi);
+IP.regSite(IP.siteQiyi);
 
-var sitePps = {
+IP.sitePps = {
     name: 'PPS',
     keys: [
         'v.pps.tv',
@@ -350,9 +352,9 @@ var sitePps = {
         };
     },
 };
-regSite(sitePps);
+IP.regSite(IP.sitePps);
 
-var site163 = {
+IP.site163 = {
     name: '网易',
     keys: [
         'v.163.com',
@@ -366,9 +368,9 @@ var site163 = {
         };
     },
 };
-regSite(site163);
+IP.regSite(IP.site163);
 
-var siteKankan = {
+IP.siteKankan = {
     name: '迅雷看看',
     keys: [
         'vod.kankan.com',
@@ -379,9 +381,9 @@ var siteKankan = {
         };
     },
 };
-regSite(siteKankan);
+IP.regSite(IP.siteKankan);
 
-var sitePptv = {
+IP.sitePptv = {
     name: 'PPTV',
     keys: [
         'v.pptv.com',
@@ -393,9 +395,9 @@ var sitePptv = {
         }
     },
 };
-regSite(sitePptv);
+IP.regSite(IP.sitePptv);
 
-var siteYinyuetai = {
+IP.siteYinyuetai = {
     name: '音悦台',
     keys: [
         'www.yinyuetai.com',
@@ -406,9 +408,9 @@ var siteYinyuetai = {
         };
     },
 };
-regSite(siteYinyuetai);
+IP.regSite(IP.siteYinyuetai);
 
-var siteSohu = {
+IP.siteSohu = {
     name: '搜狐视频',
     keys: [
         'tv.sohu.com',
@@ -433,9 +435,9 @@ var siteSohu = {
         return u.replace(sohuReg, sohuReplaceStr);
     }
 };
-regSite(siteSohu);
+IP.regSite(IP.siteSohu);
 
-var site56 = {
+IP.site56 = {
     name: '56',
     keys: [
         'www.56.com',
@@ -455,21 +457,21 @@ var site56 = {
         };
     },
 };
-regSite(site56);
+IP.regSite(IP.site56);
 
 //
 //===============================================================
 
 
 // 获取网站代号
-function getSiteCode(url){
-    if (siteList == null){
+IP.getSiteCode = function(url){
+    if (IP.siteList == null){
         return null;
     }
-    return siteList[url.host.replace('.', '_')];
+    return IP.siteList[url.host.replace('.', '_')];
 };
 
-if (isChrome() == false && isFirefox() == false){
+if (IP.isChrome() == false && IP.isFirefox() == false){
     // 添加jquery支持
     var op_jq = document.createElement("script");
     op_jq.src = "http://code.jquery.com/jquery-1.7.1.js"; //jquery code source
@@ -477,7 +479,7 @@ if (isChrome() == false && isFirefox() == false){
     document.getElementsByTagName("head")[0].appendChild(op_jq);
 }
 
-function attachVlcEvent(p, event, callback){
+IP.attachVlcEvent = function(p, event, callback){
     if (p == null || event == null || callback == null){
         return;
     }
@@ -491,9 +493,9 @@ function attachVlcEvent(p, event, callback){
 };
 
     // 获得跨域内容，通过yql
-function getCrossDomain(url, callback, maxage) {
+IP.getCrossDomain = function(url, callback, maxage) {
 
-    if (isChrome() || isFirefox()){
+    if (IP.isChrome() || IP.isFirefox()){
         
         GM_xmlhttpRequest({
             method: 'GET',
@@ -523,13 +525,27 @@ function getCrossDomain(url, callback, maxage) {
     }
 };
 
-function IcePersimmonMain(e){
+IP.appendTool = function(toolbar, title, func){
+    if (toolbar == null){
+        return;
+    }
+    var toolP = document.createElement('p');
+    toolP.className = 'ipline';
+    var toolA = document.createElement('a');
+    toolA.className = 'ipbutton';
+    toolA.href = func;
+    toolA.innerText = title;
+    toolP.appendChild(toolA);
+    toolbar.appendChild(toolP);
+};
+
+IP.IcePersimmonMain = function(e){
 
     // 查找到播放器
-    var playInf = {};
+    IP.playInf = {};
 
-    var siteInf = getSiteCode(document.location);
-    player = siteInf.getPlayer();
+    IP.siteInf = IP.getSiteCode(document.location);
+    player = IP.siteInf.getPlayer();
     
     // 没有找到，退出
     if (player == null || player.player == null){
@@ -540,15 +556,15 @@ function IcePersimmonMain(e){
     player.player.innerHTML = '';
 
     // 用vlc替代
-    var vlc = document.createElement('embed');
-    vlc.type = 'application/x-vlc-plugin';
-    vlc.name = 'vlcflash';
-    vlc.setAttribute('autoplay', 'true');
-    vlc.setAttribute('loop', 'no');
+    IP.vlc = document.createElement('embed');
+    IP.vlc.type = 'application/x-vlc-plugin';
+    IP.vlc.name = 'vlcflash';
+    IP.vlc.setAttribute('autoplay', 'true');
+    IP.vlc.setAttribute('loop', 'no');
     //vlc.setAttribute('toolbar', 'no');
-    vlc.height = player.playerHeight == null ? "100%" : player.playerHeight;
-    vlc.width = player.playerWidth == null ? '100%' : player.playerWidth;
-    player.player.appendChild(vlc);
+    IP.vlc.height = player.playerHeight == null ? "100%" : player.playerHeight;
+    IP.vlc.width = player.playerWidth == null ? '100%' : player.playerWidth;
+    player.player.appendChild(IP.vlc);
 
     navigator.plugins.refresh(false);
 
@@ -596,63 +612,67 @@ function IcePersimmonMain(e){
     }
     document.getElementsByTagName('head')[0].appendChild(btnStyle);
 
-    var toolsDiv = document.createElement('div');
-    toolsDiv.style['z-index'] = 9999;
-    toolsDiv.height = '100px';
-    toolsDiv.width = '20px';
-    toolsDiv.style['background-color'] = '#FFFFFF';
-    toolsDiv.style['position'] = 'fixed';
-    toolsDiv.style['visibility'] = 'show';
-    toolsDiv.style['left'] = '0px';
-    toolsDiv.style['top'] = '100px';
-    toolsDiv.name = 'IPTools';
-    toolsDiv.innerHTML = '<p class="ipline"><a href="" class="ipbutton">Text</a></p><p class="ipline"><a href="" class="ipbutton">Text</a></p>';
-    document.body.appendChild(toolsDiv);
+    IP.toolsDiv = document.createElement('div');
+    IP.toolsDiv.style['z-index'] = 9999;
+    IP.toolsDiv.height = '100px';
+    IP.toolsDiv.width = '20px';
+    IP.toolsDiv.style['background-color'] = '#FFFFFF';
+    IP.toolsDiv.style['position'] = 'fixed';
+    IP.toolsDiv.style['visibility'] = 'show';
+    IP.toolsDiv.style['left'] = '0px';
+    IP.toolsDiv.style['top'] = '100px';
+    IP.toolsDiv.name = 'IPTools';
+
+    IP.appendTool(IP.toolsDiv, '冰柿子', 'javascript:alert("这是冰柿子，冰了没！～～～～");');
+    IP.appendTool(IP.toolsDiv, '上一段', 'javascript:if(IP.vlc != null){IP.vlc.playlist.prev();}');
+    IP.appendTool(IP.toolsDiv, '下一段', 'javascript:if(IP.vlc != null){IP.vlc.playlist.next();}');
+
+    document.body.appendChild(IP.toolsDiv);
 
     // 是否刷新过（linux 全屏一下子）
-    var refreshed = false;
-    var playIndex = 0;
+    IP.refreshed = false;
+    IP.playIndex = 0;
 
     // 等待jQuery和vlc加载完
-    function op_wait()
+    IP.op_wait = function()
     {
-        if (isChrome() == false && isFirefox() == false){
+        if (IP.isChrome() == false && IP.isFirefox() == false){
             if(typeof window.jQuery == "undefined"){
-                window.setTimeout(op_wait,300); 
+                window.setTimeout(IP.op_wait,300); 
                 return;
             }
         }
 
-        if (isFirefox() == true){
-            if (vlc.wrappedJSObject != null){
-                vlc = vlc.wrappedJSObject;
+        if (IP.isFirefox() == true){
+            if (IP.vlc.wrappedJSObject != null){
+                IP.vlc = IP.vlc.wrappedJSObject;
             }
         }
 
-        if (typeof vlc.playlist == "undefined"){
-            window.setTimeout(op_wait,300); 
+        if (typeof IP.vlc.playlist == "undefined"){
+            window.setTimeout(IP.op_wait,300); 
             return;
         }
          
-        if (isChrome() == false && isFirefox() == false){
+        if (IP.isChrome() == false && IP.isFirefox() == false){
             $ = window.jQuery; 
         }
-        appJQuery();
+        IP.appJQuery();
     }
-    op_wait();
+    IP.op_wait();
 
     // 播放到结尾时
-    function playerEndReached(e){
-        if (vlc && vlc.playlist){
-            if (isX11()){
+    IP.playerEndReached = function(e){
+        if (IP.vlc && IP.vlc.playlist){
+            if (IP.isX11()){
                 // Linux下需要处理才能自动跳到下面一段
-                playIndex++;
-                if (playIndex < playInf.Items.length){
-                    vlc.playlist.next();
+                IP.playIndex++;
+                if (IP.playIndex < IP.playInf.Items.length){
+                    IP.vlc.playlist.next();
                 } else {
                     // 连播
-                    if (siteInf != null && siteInf.handleEndReached != null){
-                        siteInf.handleEndReached();
+                    if (IP.siteInf != null && IP.siteInf.handleEndReached != null){
+                        IP.siteInf.handleEndReached();
                     }
                 }
             }
@@ -661,107 +681,114 @@ function IcePersimmonMain(e){
     };
 
     // 开始播放时
-    function playerPlaying(){
-        if (vlc && vlc.playlist && !refreshed){
-            if (isX11()){
+    IP.playerPlaying = function(){
+        if (IP.vlc && IP.vlc.playlist && !IP.refreshed){
+            if (IP.isX11()){
                 // Linux 下，需要在播放时全屏一下子，才能显示出视频
-                vlc.video.toggleFullscreen();
-                vlc.video.toggleFullscreen();
+                IP.vlc.video.toggleFullscreen();
+                IP.vlc.video.toggleFullscreen();
             }
-            refreshed = true;
+            IP.refreshed = true;
             return;
         }
     };
     
-    // 主处理
-    function appJQuery()
-    {
-        getCrossDomain("http://www.flvcd.com/parse.php?flag=one&format=super&kw=" + encodeURIComponent(document.location), function(html){
+    // 处理解析结果
+    IP.handleFlvcdResult = function(html){
 
-            // vlc 事件处理
-            attachVlcEvent(vlc, 'MediaPlayerEndReached', playerEndReached);
-            attachVlcEvent(vlc, 'MediaPlayerPlaying', playerPlaying);
+        // vlc 事件处理
+        IP.attachVlcEvent(IP.vlc, 'MediaPlayerEndReached', IP.playerEndReached);
+        IP.attachVlcEvent(IP.vlc, 'MediaPlayerPlaying', IP.playerPlaying);
 
-            var parse = document.createElement('div');
-            parse.innerHTML = html;
+        var parse = document.createElement('div');
+        parse.innerHTML = html;
 
-            var forms = parse.getElementsByTagName('form');
-            if (forms != null){
-                var playInfValue = null;
-                for (var i=0; i<forms.length; i++){
-                    if (forms[i].getAttribute('name') == 'mform'){
-                        // 又找到了 ^_^
+        var forms = parse.getElementsByTagName('form');
+        if (forms != null){
+            var playInfValue = null;
+            for (var i=0; i<forms.length; i++){
+                if (forms[i].getAttribute('name') == 'mform'){
+                    // 又找到了 ^_^
 
-                        var mform = forms[i];
-                        var inputs = mform.getElementsByTagName('input');
-                        if (inputs == null){
-                            break;
-                        }
-                        for (var j=0; j<inputs.length; j++){
-                            if (inputs[j].getAttribute('name') == 'inf'){
-                                
-                                playInfValue = inputs[j].value;
-                                
-                                break;
-                            }
-                        }
-
+                    var mform = forms[i];
+                    var inputs = mform.getElementsByTagName('input');
+                    if (inputs == null){
                         break;
                     }
-                }
-
-                if (playInfValue != null){
-
-                    var listInfo = playInfValue.split('<');
-                    if (listInfo == null){
-                        return;
+                    for (var j=0; j<inputs.length; j++){
+                        if (inputs[j].getAttribute('name') == 'inf'){
+                            
+                            playInfValue = inputs[j].value;
+                            
+                            break;
+                        }
                     }
 
-                    var r = new RegExp('(.*)>(.*)');
+                    break;
+                }
+            }
+
+            IP.playInf = {};
+            if (playInfValue != null){
+                var listInfo = playInfValue.split('<');
+                if (listInfo == null){
+                    return;
+                }
+                
+                var r = new RegExp('(.*)>(.*)');
                     
-                    for (var i=0; i< listInfo.length; i++){
-                        var m = listInfo[i].replace(/(^\s*)|(\s*$)/g, "").match(r);
+                for (var i=0; i< listInfo.length; i++){
+                    var m = listInfo[i].replace(/(^\s*)|(\s*$)/g, "").match(r);
                     
-                        if (m != null && m.length == 3){
-                            if (typeof playInf.Items == 'undefined'){
-                                if (m[1] == 'N'){
-                                    playInf.Items = [];
-                                    playInf.Items.push({N: m[2]});
-                                } else {
-                                    if (m[2] != ''){
-                                        playInf[m[1]] = m[2];
-                                    }
-                                }
+                    if (m != null && m.length == 3){
+                        if (typeof IP.playInf.Items == 'undefined'){
+                            if (m[1] == 'N'){
+                                IP.playInf.Items = [];
+                                IP.playInf.Items.push({N: m[2]});
                             } else {
-                                if (m[1] == 'N'){
-                                    playInf.Items.push({N: m[2]});
-                                } else {
-                                    if (m[2] != ''){
-                                        playInf.Items[playInf.Items.length - 1][m[1]] = m[2];
-                                    }
+                                if (m[2] != ''){
+                                    IP.playInf[m[1]] = m[2];
+                                }
+                            }
+                        } else {
+                            if (m[1] == 'N'){
+                                IP.playInf.Items.push({N: m[2]});
+                            } else {
+                                if (m[2] != ''){
+                                    IP.playInf.Items[IP.playInf.Items.length - 1][m[1]] = m[2];
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            if (playInf != null && playInf.Items != null){
-
-                // 添加到vlc播放列表
-                for (var i=0; i<playInf.Items.length; i++){
-                    if (siteInf != null && siteInf.handleFlvcdU != null){
-                        playInf.Items[i].U = siteInf.handleFlvcdU(playInf.Items[i].U);
-                    }
-                    vlc.playlist.add(playInf.Items[i].U);
+        IP.vlc.playlist.stop();
+        IP.vlc.playlist.clear();
+        if (IP.playInf != null && IP.playInf.Items != null){
+            // 添加到vlc播放列表
+            for (var i=0; i<IP.playInf.Items.length; i++){
+                if (IP.siteInf != null && IP.siteInf.handleFlvcdU != null){
+                    IP.playInf.Items[i].U = IP.siteInf.handleFlvcdU(playInf.Items[i].U);
                 }
-                vlc.playlist.playItem(0);
-                playIndex = 0;
+                IP.vlc.playlist.add(IP.playInf.Items[i].U);
             }
+            IP.vlc.playlist.playItem(0);
+            IP.playIndex = 0;
+        }
 
-        }, null);
-    }
+        // 检测是不是有别的分辨率
+        var hrefList = document.getElementsByTagName('a');
+        for (var i=0; i<hrefList.length; i++){
+            
+        }
+    };
+
+    IP.appJQuery = function(){
+        IP.getCrossDomain("http://www.flvcd.com/parse.php?flag=one&format=super&kw=" + encodeURIComponent(document.location), IP.handleFlvcdResult, null);
+    };
 };
 
-IcePersimmonMain();
+IP.IcePersimmonMain();
 //window.addEventListener('load', IcePersimmonMain, false);
