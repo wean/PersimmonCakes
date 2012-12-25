@@ -779,9 +779,26 @@ IP.IcePersimmonMain = function(e){
         }
 
         // 检测是不是有别的分辨率
-        var hrefList = document.getElementsByTagName('a');
-        for (var i=0; i<hrefList.length; i++){
-            
+        var hrefList = parse.getElementsByTagName('a');
+        for (var i=hrefList.length - 1; i>0; i--){
+            var hrefOtherParser = hrefList[i];
+            if (hrefOtherParser.children.length <= 0){
+                continue;
+            }
+            if (hrefOtherParser.children[0].tagName != 'FONT'){
+                continue;
+            }
+            var fontObj = hrefOtherParser.children[0];
+            if (fontObj.children.length <= 0){
+                continue;
+            }
+            var titleObj = fontObj.children[0].innerText;
+            if (titleObj.length < 4){
+                continue;
+            }
+            if (titleObj.substr(titleObj.length - 4, 4) == '模式解析'){
+                IP.appendTool(IP.toolsDiv, titleObj.substr(0, titleObj.length - 4) + '版', "javascript:IP.getCrossDomain('http://www.flvcd.com/" + hrefOtherParser.href.substr(hrefOtherParser.href.indexOf('parse.php')) + "', IP.handleFlvcdResult, null);");
+            }
         }
     };
 
