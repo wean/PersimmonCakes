@@ -1,4 +1,4 @@
-﻿// ==UserScript==  
+﻿// ==UserScript==
 /// @name IcePersimmon
 // @namespace gm.weans.info
 // @description VLC替代视频网站的Flash播放器
@@ -14,11 +14,11 @@
 // @include http://tv.sohu.com/*
 // @include http://v.sohu.com/*
 // @include http://www.56.com/*
-// ==/UserScript==  
+// ==/UserScript==
 
 
 //==================================================================//
-//                                                                  
+//
 //                        使用方法
 // Opera 安装方法:
 //     1. 随便拷贝到一个文件夹下，好吧，最好拷贝到一个单独的文件夹。
@@ -83,7 +83,7 @@ IP.getDigitals = function(str){
 
 // 格式化数字
 IP.formatDigital = function(str){
-    
+
 };
 
 // 获取关联度最大的视频
@@ -187,7 +187,7 @@ IP.siteYouku = {
         var relateVideo = IP.getMostRelateVideo(curTitle, videos);
         if (relateVideo != null){
             document.location.href = relateVideo.href;
-        } 
+        }
     },
     handleEndReached : function(){
         // 专辑
@@ -211,13 +211,13 @@ IP.siteYouku = {
                 ulPage = ulLists[i];
             }
         }
-        
+
         // 点播单
         if (ulContent == null){
             pagerParam = '';
             ulContent = document.getElementById('orderList');
         }
-        
+
         if (ulContent != null){
             var nextLink = null;
             for (var i=0; i<ulContent.children.length; i++){
@@ -234,7 +234,7 @@ IP.siteYouku = {
                     break;
                 }
             }
-            
+
             if (nextLink == null && ulPage != null){
                 // 下翻一页
                 var pagerLink = null;
@@ -246,7 +246,7 @@ IP.siteYouku = {
                         } else {
                             linkA = null;
                         }
-                        
+
                         if (linkA != null){
                             pagerLink = linkA.href + pagerParam;
                         }
@@ -289,7 +289,7 @@ IP.siteYouku = {
                 xmlReq.send(null);
                 return;
             }
-            
+
             if (nextLink != null){
                 document.location.href = nextLink;
             } else {
@@ -496,7 +496,7 @@ IP.attachVlcEvent = function(p, event, callback){
 IP.getCrossDomain = function(url, callback, maxage) {
 
     if (IP.isChrome() || IP.isFirefox()){
-        
+
         GM_xmlhttpRequest({
             method: 'GET',
             url: url,
@@ -506,7 +506,7 @@ IP.getCrossDomain = function(url, callback, maxage) {
                 }
             }
         });
-            
+
         return;
     }
 
@@ -546,7 +546,7 @@ IP.IcePersimmonMain = function(e){
 
     IP.siteInf = IP.getSiteCode(document.location);
     player = IP.siteInf.getPlayer();
-    
+
     // 没有找到，退出
     if (player == null || player.player == null){
         return;
@@ -638,7 +638,7 @@ IP.IcePersimmonMain = function(e){
     {
         if (IP.isChrome() == false && IP.isFirefox() == false){
             if(typeof window.jQuery == "undefined"){
-                window.setTimeout(IP.op_wait,300); 
+                window.setTimeout(IP.op_wait,300);
                 return;
             }
         }
@@ -650,12 +650,12 @@ IP.IcePersimmonMain = function(e){
         }
 
         if (typeof IP.vlc.playlist == "undefined"){
-            window.setTimeout(IP.op_wait,300); 
+            window.setTimeout(IP.op_wait,300);
             return;
         }
-         
+
         if (IP.isChrome() == false && IP.isFirefox() == false){
-            $ = window.jQuery; 
+            $ = window.jQuery;
         }
         IP.appJQuery();
     }
@@ -692,7 +692,7 @@ IP.IcePersimmonMain = function(e){
             return;
         }
     };
-    
+
     // 处理解析结果
     IP.handleFlvcdResult = function(html){
 
@@ -717,9 +717,9 @@ IP.IcePersimmonMain = function(e){
                     }
                     for (var j=0; j<inputs.length; j++){
                         if (inputs[j].getAttribute('name') == 'inf'){
-                            
+
                             playInfValue = inputs[j].value;
-                            
+
                             break;
                         }
                     }
@@ -734,12 +734,12 @@ IP.IcePersimmonMain = function(e){
                 if (listInfo == null){
                     return;
                 }
-                
+
                 var r = new RegExp('(.*)>(.*)');
-                    
+
                 for (var i=0; i< listInfo.length; i++){
                     var m = listInfo[i].replace(/(^\s*)|(\s*$)/g, "").match(r);
-                    
+
                     if (m != null && m.length == 3){
                         if (typeof IP.playInf.Items == 'undefined'){
                             if (m[1] == 'N'){
