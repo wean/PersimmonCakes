@@ -7,6 +7,7 @@
 // @version 0.1.2
 // @include http://v.youku.com/v_show/*
 // @include http://bilibili.smgbb.cn/video/av*
+// @include http://www.bilibili.tv/video/av*
 // @include http://v.pps.tv/*
 // @include http://v.163.com/movie/*
 // @include http://vod.kankan.com/v/*
@@ -304,6 +305,7 @@ IP.siteBilibili = {
     name: 'BiliBili',
     keys: [
         'bilibili.smgbb.cn',
+        'www.bilibili.tv',
     ],
     getPlayer: function(){
         var player = document.getElementById('bofqi');
@@ -659,7 +661,6 @@ IP.IcePersimmonMain = function(e){
         }
         IP.appJQuery();
     }
-    IP.op_wait();
 
     // 播放到结尾时
     IP.playerEndReached = function(e){
@@ -805,6 +806,7 @@ IP.IcePersimmonMain = function(e){
     IP.appJQuery = function(){
         IP.getCrossDomain("http://www.flvcd.com/parse.php?flag=one&format=super&kw=" + encodeURIComponent(document.location), IP.handleFlvcdResult, null);
     };
+    IP.op_wait();
 };
 
 IP.IcePersimmonMain();
