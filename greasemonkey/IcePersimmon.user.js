@@ -708,7 +708,7 @@ IP.IcePersimmonMain = function(e){
         if (forms != null){
             var playInfValue = null;
             for (var i=0; i<forms.length; i++){
-                if (forms[i].getAttribute('name') == 'mform'){
+                if (forms[i].getAttribute('name') == 'm3uForm'){
                     // 又找到了 ^_^
 
                     var mform = forms[i];
@@ -731,37 +731,7 @@ IP.IcePersimmonMain = function(e){
 
             IP.playInf = {};
             if (playInfValue != null){
-                var listInfo = playInfValue.split('<');
-                if (listInfo == null){
-                    return;
-                }
-
-                var r = new RegExp('(.*)>(.*)');
-
-                for (var i=0; i< listInfo.length; i++){
-                    var m = listInfo[i].replace(/(^\s*)|(\s*$)/g, "").match(r);
-
-                    if (m != null && m.length == 3){
-                        if (typeof IP.playInf.Items == 'undefined'){
-                            if (m[1] == 'N'){
-                                IP.playInf.Items = [];
-                                IP.playInf.Items.push({N: m[2]});
-                            } else {
-                                if (m[2] != ''){
-                                    IP.playInf[m[1]] = m[2];
-                                }
-                            }
-                        } else {
-                            if (m[1] == 'N'){
-                                IP.playInf.Items.push({N: m[2]});
-                            } else {
-                                if (m[2] != ''){
-                                    IP.playInf.Items[IP.playInf.Items.length - 1][m[1]] = m[2];
-                                }
-                            }
-                        }
-                    }
-                }
+                IP.playInf.Items = playInfValue.split(' ');
             }
         }
 
@@ -771,9 +741,9 @@ IP.IcePersimmonMain = function(e){
             // 添加到vlc播放列表
             for (var i=0; i<IP.playInf.Items.length; i++){
                 if (IP.siteInf != null && IP.siteInf.handleFlvcdU != null){
-                    IP.playInf.Items[i].U = IP.siteInf.handleFlvcdU(playInf.Items[i].U);
+                    IP.playInf.Items[i] = IP.siteInf.handleFlvcdU(playInf.Items[i]);
                 }
-                IP.vlc.playlist.add(IP.playInf.Items[i].U);
+                IP.vlc.playlist.add(IP.playInf.Items[i]);
             }
             IP.vlc.playlist.playItem(0);
             IP.playIndex = 0;
