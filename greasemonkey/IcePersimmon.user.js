@@ -731,7 +731,7 @@ IP.IcePersimmonMain = function(e){
 
             IP.playInf = {};
             if (playInfValue != null){
-                IP.playInf.Items = playInfValue.split(' ');
+                IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').split(' ');
             }
         }
 
@@ -741,9 +741,9 @@ IP.IcePersimmonMain = function(e){
             // 添加到vlc播放列表
             for (var i=0; i<IP.playInf.Items.length; i++){
                 if (IP.siteInf != null && IP.siteInf.handleFlvcdU != null){
-                    IP.playInf.Items[i] = IP.siteInf.handleFlvcdU(playInf.Items[i]);
+                    IP.playInf.Items[i] = IP.siteInf.handleFlvcdU(playInf.Items[i].replace('\n', ''));
                 }
-                IP.vlc.playlist.add(IP.playInf.Items[i]);
+                IP.vlc.playlist.add(IP.playInf.Items[i].replace('\n',''));
             }
             IP.vlc.playlist.playItem(0);
             IP.playIndex = 0;
