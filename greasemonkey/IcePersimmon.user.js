@@ -731,7 +731,7 @@ IP.IcePersimmonMain = function(e){
 
             IP.playInf = {};
             if (playInfValue != null){
-                IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').split(' ');
+                IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').replace('|', ' ').split(' ');
             }
         }
 
