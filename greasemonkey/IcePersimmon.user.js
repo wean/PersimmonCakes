@@ -728,6 +728,18 @@ IP.IcePersimmonMain = function(e){
                     break;
                 }
             }
+            if (playInfValue == null){
+                var ass = parse.getElementsByTagName('a');
+                if (ass != null){
+                    for (var i=0; i<ass.length; i++){
+                        if (ass[i].getAttribute('class') == 'link'){
+                            
+                            playInfValue = ass[i].href;
+                            break;    
+                        }
+                    }    
+                }
+            }
 
             IP.playInf = {};
             if (playInfValue != null){
