@@ -9,6 +9,7 @@
 // @include http://bilibili.smgbb.cn/video/av*
 // @include http://www.bilibili.tv/video/av*
 // @include http://v.pps.tv/*
+// @include http://ipd.pps.tv/*
 // @include http://v.163.com/movie/*
 // @include http://vod.kankan.com/v/*
 // @include http://www.yinyuetai.com/video/*
@@ -339,9 +340,13 @@ IP.sitePps = {
     name: 'PPS',
     keys: [
         'v.pps.tv',
+        'ipd.pps.tv',
     ],
     getPlayer : function(){
         var player = document.getElementById('p-players');
+        if (player == null){
+            player = document;    
+        }
         var divs = player.getElementsByTagName('div');
         for (var i=0; i<divs.length; i++){
             if (divs[i].className == 'flash-player'){
