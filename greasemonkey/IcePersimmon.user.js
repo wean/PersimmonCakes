@@ -40,6 +40,10 @@
 //
 //==================================================================//
 
+String.prototype.replaceAll  = function(s1,s2){   
+    return this.replace(new RegExp(s1,"gm"),s2);   
+}
+
 var IP = {};
 
 // 判断OS
@@ -748,7 +752,7 @@ IP.IcePersimmonMain = function(e){
 
             IP.playInf = {};
             if (playInfValue != null){
-                IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').replace('|', ' ').split(' ');
+                IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\|/g, ' ').split(' ');
             }
         }
 
