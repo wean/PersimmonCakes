@@ -1,5 +1,5 @@
 ﻿// ==UserScript==
-/// @name IcePersimmon
+// @name IcePersimmon
 // @namespace gm.weans.info
 // @description VLC替代视频网站的Flash播放器
 // @author Wean
