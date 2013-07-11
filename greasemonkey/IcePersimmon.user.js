@@ -16,6 +16,17 @@
 // @include http://tv.sohu.com/*
 // @include http://v.sohu.com/*
 // @include http://www.56.com/*
+// @match http://v.youku.com/v_show/*
+// @match http://bilibili.smgbb.cn/video/av*
+// @match http://www.bilibili.tv/video/av*
+// @match http://v.pps.tv/*
+// @match http://ipd.pps.tv/*
+// @match http://v.163.com/movie/*
+// @match http://vod.kankan.com/v/*
+// @match http://www.yinyuetai.com/video/*
+// @match http://tv.sohu.com/*
+// @match http://v.sohu.com/*
+// @match http://www.56.com/*
 // ==/UserScript==
 
 
