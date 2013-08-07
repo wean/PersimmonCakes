@@ -717,6 +717,11 @@ IP.IcePersimmonMain = function(e){
     // 处理解析结果
     IP.handleFlvcdResult = function(html){
 
+        if (html == undefined){
+            IP.appJQuery();
+            return;
+        }
+
         // vlc 事件处理
         IP.attachVlcEvent(IP.vlc, 'MediaPlayerEndReached', IP.playerEndReached);
         IP.attachVlcEvent(IP.vlc, 'MediaPlayerPlaying', IP.playerPlaying);
