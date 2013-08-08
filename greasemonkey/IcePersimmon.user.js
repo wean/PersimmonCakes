@@ -55,6 +55,12 @@ String.prototype.replaceAll  = function(s1,s2){
     return this.replace(new RegExp(s1,"gm"),s2);   
 }
 
+String.prototype.trim = function(){
+    //   用正则表达式将前后空格
+    //   用空字符串替代。
+    return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
 var IP = {};
 
 // 判断OS
@@ -574,8 +580,9 @@ IP.IcePersimmonMain = function(e){
         return;
     }
 
+    //IP.oldPlayer = player.player.innerHTML;
     // 删掉播放器
-    player.player.innerHTML = '';
+    //player.player.innerHTML = '';
 
     // 用vlc替代
     IP.vlc = document.createElement('embed');
@@ -767,14 +774,15 @@ IP.IcePersimmonMain = function(e){
             }
 
             IP.playInf = {};
-            if (playInfValue != null){
+            if (playInfValue != null && playInfValue.trim() != ''){
                 IP.playInf.Items = playInfValue.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\|/g, ' ').split(' ');
             }
         }
 
         IP.vlc.playlist.stop();
         IP.vlc.playlist.clear();
-        if (IP.playInf != null && IP.playInf.Items != null){
+        player = IP.siteInf.getPlayer();
+        if (IP.playInf != null && IP.playInf.Items != null && IP.playInf.Items.length > 0){
             // 添加到vlc播放列表
             for (var i=0; i<IP.playInf.Items.length; i++){
                 if (IP.siteInf != null && IP.siteInf.handleFlvcdU != null){
@@ -784,6 +792,17 @@ IP.IcePersimmonMain = function(e){
             }
             IP.vlc.playlist.playItem(0);
             IP.playIndex = 0;
+            if (player != null && player.player != null){
+                while(
+                    player.player.childNodes.length > 1    
+                ){
+                    player.player.removeChild(player.player.firstChild);
+                }
+            }
+        } else {
+            if (player != null && player.player != null){
+                player.player.removeChild(player.player.lastChild);
+            }
         }
 
         // 检测是不是有别的分辨率
